@@ -94,7 +94,6 @@ def add_var_dims(in_object, out_object, axis, fname, common_date):
             # indices
             n_dims = len(out_var.dimensions)
             if n_dims > 0:
-                # ToDo this throws an error if axis_dim_n is greater than n_dims - if the dimension that the axis is on
                 index = np.zeros(n_dims, 'i')
                 index[axis_dim_n] = c_shape[0]
                 # get the location along the aggregation axis in the Master Array,
@@ -113,19 +112,12 @@ def add_var_dims(in_object, out_object, axis, fname, common_date):
                     axis_dim_values = get_universal_times(
                         axis_dim_var, common_date
                     )
-                # ToDo this part has been added by myself - flow control was incorrect need to apply value to variable
-                #  regardless of if statement
-                else:
-                    axis_dim_values = axis_dim_var[:]
 
                 # get the axis resolution - i.e. the difference for each step
                 # along the axis
                 try:
                     axis_res = (axis_dim_values[-1] - axis_dim_values[0]) / len(axis_dim_values)
                 except IndexError:
-                    axis_res = 1
-                # ToDo added to avoid divide by 0 error - assumption based off index error above
-                if axis_res == 0:
                     axis_res = 1
                 # set the location for the aggregating axis dimension
                 location[axis_dim_n, 0] = int(axis_dim_values[0] / axis_res)
